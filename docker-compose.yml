@@ -1,0 +1,28 @@
+version: "3.8"
+
+services:
+  python:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      args:
+        BASE_IMAGE: ${BASE_IMAGE}
+    container_name: kensuiou-model
+    env_file:
+      - ".env"
+    tty: true
+    stdin_open: true
+    volumes:
+      - ./:/workspace
+      - $HOME/.ssh:/root/.ssh
+    shm_size: "8g"
+    deploy:
+      resources:
+        limits:
+          memory: 16g
+        reservations:
+          memory: 8g
+          devices:
+            - driver: nvidia
+              count: 1
+              capabilities: [gpu]
